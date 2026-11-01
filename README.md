@@ -25,8 +25,8 @@ Fly through the gaps in the pipes without hitting them or the ground.
 ## Build & Run
 
 ```bash
-gcc flappy_bird.c -o flappy_bird.exe
-./flappy_bird.exe
+gcc flappybird.c -o flappybird.exe
+./flappybird.exe
 ```
 
 ---
@@ -35,14 +35,14 @@ gcc flappy_bird.c -o flappy_bird.exe
 
 | File | Description |
 |------|-------------|
-| `flappy_bird.c` | The game source code |
-| `flappy_bird_documentation.docx` | Line-by-line explanation of every line of code |
+| `flappybird.c` | The game source code |
+| `flappybirddocumentation.docx` | Line-by-line explanation of every line of code |
 
 ---
 
 ## Settings
 
-You can change these values at the top of `flappy_bird.c` to adjust difficulty:
+You can change these values at the top of `flappybird.c` to adjust difficulty:
 
 ```c
 #define SCREEN_WIDTH   40   // width of the game screen
