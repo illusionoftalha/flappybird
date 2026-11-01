@@ -1,0 +1,4 @@
+# Local compiler output
+/flappybird
+/flappybird.exe
+*.o
