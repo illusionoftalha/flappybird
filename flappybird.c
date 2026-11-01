@@ -1,20 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <windows.h>                                                          
+#include <windows.h>
 
 int col_bird_pipe();
 
 #define SCREEN_WIDTH   40
 #define SCREEN_HEIGHT  20
-#define PIPE_GAP        6                                             
-#define PIPE_SPEED      1                                             
+#define PIPE_GAP        6
+#define PIPE_SPEED      1
 
 
-float bird_y    = 10;                                               
-float bird_speed = 0;                                               
+float bird_y    = 10;
+float bird_speed = 0;
 
-int pipe_x      = 35;                                               
-int pipe_hole   = 7;                                                
+int pipe_x      = 35;
+int pipe_hole   = 7;
 
 int score = 0;
 
@@ -34,54 +34,40 @@ void hide_cursor()
 
 void draw()
 {
-    reset_cursor();                                            
-
+    char frame[(SCREEN_WIDTH + 1) * (SCREEN_HEIGHT + 1) + 128];
+    size_t used = 0;
     int row, col;
 
     for (row = 0; row < SCREEN_HEIGHT; row++)
     {
         for (col = 0; col < SCREEN_WIDTH; col++)
         {
+            char cell = ' ';
             if (col == 5 && row == (int)bird_y)
-            {
-                printf("O");                      
-            }
-
+                cell = 'O';
             else if (col == pipe_x)
-            {
-                int in_hole = (row >= pipe_hole && row < pipe_hole + PIPE_GAP);
-
-                if (in_hole)
-                    printf(" ");                               
-                else
-                    printf("|");                               
-            }
-
+                cell = (row >= pipe_hole && row < pipe_hole + PIPE_GAP) ? ' ' : '|';
             else if (col == SCREEN_WIDTH - 1)
-            {
-                printf("|");
-            }
-
-            else
-            {
-                printf(" ");
-            }
+                cell = '|';
+            frame[used++] = cell;
         }
-
-        printf("\n");
+        frame[used++] = '\n';
     }
-
     for (col = 0; col < SCREEN_WIDTH; col++)
-        printf("-");
-    printf("\n");
+        frame[used++] = '-';
+    frame[used++] = '\n';
+    used += snprintf(frame + used, sizeof(frame) - used,
+                     "  Score: %d     (SPACE=flap, Q=quit)\n", score);
 
-    printf("  Score: %d     (SPACE=flap, Q=quit)\n", score);
+    reset_cursor();
+    fwrite(frame, 1, used, stdout);
+    fflush(stdout);
 }
 
 void update()
 {
-    bird_speed = bird_speed + 0.4f;                                  
-    bird_y     = bird_y + bird_speed;                                
+    bird_speed = bird_speed + 0.4f;
+    bird_y     = bird_y + bird_speed;
 
     pipe_x = pipe_x - PIPE_SPEED;
 
@@ -113,16 +99,16 @@ int col_bird_pipe()
         int in_hole = (bird_row >= pipe_hole && bird_row < pipe_hole + PIPE_GAP);
 
         if (!in_hole)
-            return 1;                   
+            return 1;
     }
 
-    return 0;                     
+    return 0;
 }
 
 int main()
 {
     hide_cursor();
-    srand(42);                            
+    srand(42);
 
     printf("=== FLAPPY BIRD ===\n");
     printf("Press SPACE to start!\n");
@@ -134,7 +120,7 @@ int main()
     {
         if (GetAsyncKeyState(VK_SPACE) & 0x8000)
         {
-            bird_speed = -2.0f;                                    
+            bird_speed = -2.0f;
         }
 
         if (GetAsyncKeyState('Q') & 0x8000)
@@ -142,10 +128,10 @@ int main()
             break;
         }
 
-        update();                        
-        draw();                          
+        update();
+        draw();
 
-        Sleep(80);                                              
+        Sleep(80);
     }
 
     printf("\n  GAME OVER! Final score: %d\n", score);
